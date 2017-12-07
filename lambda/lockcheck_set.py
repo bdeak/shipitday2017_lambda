@@ -53,7 +53,10 @@ def update_opened_status(table, imei, vin_token, state):
     table.update_item(Key={'imei':imei},
         UpdateExpression="SET is_open = :is_open",
         ConditionExpression="vin_token = :vin_token",
-        ExpressionAttributeValues={':vin_token': vin_token, ':is_open': state})
+        ExpressionAttributeValues={':vin_token': vin_token, ':is_open': str2bool(state)})
+
+def str2bool(v):
+  return v.lower() in ("yes", "true", "t", "1")
 
 def scan_table(table, filter_key=None, filter_value=None):
     """
