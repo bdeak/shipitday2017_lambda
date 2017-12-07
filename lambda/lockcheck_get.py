@@ -15,10 +15,10 @@ def check_access(data, vin_token):
             return True
     return False
 
-def get_need_to_be_open_status(data, vin_token):
+def get_status(data, vin_token):
     for element in data:
         if element['vin_token'] == vin_token:
-            return element['need_to_be_open']
+            return { "need_to_be_open": element['need_to_be_open'], "is_open": element["is_open"] }
 
 def lambda_handler(event, context):
     # list all entries from the db
@@ -41,9 +41,9 @@ def lambda_handler(event, context):
     if check_access(result_list, vin_token) == False:
         return http_response(403, { "success": "false", "message": "Access denied" })
 
-    result = get_need_to_be_open_status(result_list, vin_token)
+    result = get_status(result_list, vin_token)
 
-    return http_response(200, { "need_to_be_open": result })
+    return http_response(200, result)
 
 def get_table(dynamodb_resource, table_name):
     return dynamodb_resource.Table(table_name)
