@@ -34,7 +34,7 @@ def lambda_handler(event, context):
     entries_data = [entries[0], entries[-1]]
     result_list = []
     for data_group in entries_data:
-        entries_filtered = {k: v for k, v in data_group.items() if k in ['vin_token', 'is_open', 'imei']}
+        entries_filtered = {k: v for k, v in data_group.items() if k in ['vin_token', 'need_to_be_open', 'is_open', 'imei']}
         result_list.append(entries_filtered)
 
     # look for an element where vin_token == vin_token and token == token
