@@ -33,34 +33,21 @@ def lambda_handler(event, context):
         entries_filtered = {k: v for k, v in data_group.items() if k in ['imei', 'phone_token']}
         result_list.append(entries_filtered)
 
-    # return http_response(200, result_list)
     # look for an element where imei == imei and token == token
     if check_access(result_list, imei, phone_token) == False:
         return http_response(403, { "success": "false", "message": "Access denied" })
 
-    # return http_response(200, { "success": "true", "message": "Code command accepted." })
 
     # update need_to_be_opened
-    
+    update_opened_status(table, imei, False)
 
-    # check if token and imei are ok
-    # change need_to_be_opened to false
-    # return success
+    return http_response(200, { "success": "true", "message": "Command accepted." })
 
+def update_opened_status(table, imei, state):
+        table.update_item(Key={'imei':imei},
+            UpdateExpression="SET need_to_be_opened = :need_to_be_opened",
+            ExpressionAttributeValues={':need_to_be_opened': state})
 
-#
-#
-#     # get all items, while filtering out some columns
-#     entries = scan_table(table)['Items']
-#     entries_data = [entries[0], entries[-1]]
-#     #return entries_data
-#     masked_fields = [ 'token' ]
-#     result_list = []
-#     for data_group in entries_data:
-#         entries_filtered = {k: v for k, v in data_group.items() if k not in masked_fields}
-#         result_list.append(entries_filtered)
-#     return http_response(200, result_list)
-#
 def get_table(dynamodb_resource, table_name):
     return dynamodb_resource.Table(table_name)
 
