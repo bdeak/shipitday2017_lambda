@@ -42,7 +42,6 @@ def lambda_handler(event, context):
         return http_response(403, { "success": "false", "message": "Access denied" })
 
     imei = get_imei_for_vin_token(result_list, vin_token)
-
     update_opened_status(table, imei, vin_token, is_open)
 
     return http_response(200, { "success": "true", "message": "Command accepted." })
@@ -51,10 +50,10 @@ def get_table(dynamodb_resource, table_name):
     return dynamodb_resource.Table(table_name)
 
 def update_opened_status(table, imei, vin_token, state):
-        table.update_item(Key={'imei':imei},
-            ConditionExpression="vin_token = :vin_token",
-            UpdateExpression="SET is_open = :is_open",
-            ExpressionAttributeValues={':vin_token': vin_token, ':is_open': state})
+    table.update_item(Key={'imei':imei},
+        UpdateExpression="SET is_open = :is_open",
+        ConditionExpression="vin_token = :vin_token",
+        ExpressionAttributeValues={':vin_token': vin_token, ':is_open': state})
 
 def scan_table(table, filter_key=None, filter_value=None):
     """
