@@ -38,15 +38,15 @@ def lambda_handler(event, context):
         return http_response(403, { "success": "false", "message": "Access denied" })
 
 
-    # update need_to_be_opened
+    # update need_to_be_open
     update_opened_status(table, imei, True)
 
     return http_response(200, { "success": "true", "message": "Command accepted." })
 
 def update_opened_status(table, imei, state):
         table.update_item(Key={'imei':imei},
-            UpdateExpression="SET need_to_be_opened = :need_to_be_opened",
-            ExpressionAttributeValues={':need_to_be_opened': state})
+            UpdateExpression="SET need_to_be_open = :need_to_be_open",
+            ExpressionAttributeValues={':need_to_be_open': state})
 
 def get_table(dynamodb_resource, table_name):
     return dynamodb_resource.Table(table_name)
