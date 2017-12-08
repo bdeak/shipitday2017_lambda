@@ -63,6 +63,7 @@ while (true)
 		$result = callApi($url, $vin);
 		var_dump('unlocked');
 		carHighlight(true);
+		sleep(3);
 		// call function for car disco with var $unlock_state
 		
 	} else if (!$result['need_to_be_open'] && $result['is_open']) {
@@ -72,6 +73,7 @@ while (true)
 		$result = callApi($url, $vin);
 		var_dump('locked');
 		carHighlight(false);
+		sleep(3);
 		// call function for car disco with var $unlock_state
 		
 	} else {
@@ -79,7 +81,7 @@ while (true)
 		$result = callApi($url, $vin);
 		var_dump('waiting');
 	}
-	sleep(3);
+	
 }
 
 function callApi($url, $vin, $data = array(), $method = '') {
