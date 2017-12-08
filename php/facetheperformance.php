@@ -1,5 +1,49 @@
 <?php
+
+require_once 'vendor/autoload.php';
+
+use PiPHP\GPIO\GPIO;
+use PiPHP\GPIO\Pin\PinInterface;
+
 ob_implicit_flush();
+
+$gpio_front = new GPIO();
+$gpio_rear = new GPIO();
+
+$pin_front = $gpio_front->getOutputPin(24);
+
+$pin_rear = $gpio_rear->getOutputPin(25);
+
+function carHighlight($unlocked) {
+
+	$pin_front->setValue(PinInterface::VALUE_LOW);
+	$pin_rear->setValue(PinInterface::VALUE_LOW);
+	
+	if ($unlocked == true)
+	{
+		for($i=0; $i < 4; $i++) {
+			usleep(100000);
+			$pin_front->setValue(PinInterface::VALUE_HIGH);
+			$pin_rear->setValue(PinInterface::VALUE_HIGH);
+			usleep(100000);
+			$pin_front->setValue(PinInterface::VALUE_LOW);
+			$pin_rear->setValue(PinInterface::VALUE_LOW);
+		}
+	} else {
+		for($i=0; $i < 2; $i++) {
+			usleep(250000);
+			$pin_front->setValue(PinInterface::VALUE_LOW);
+			$pin_rear->setValue(PinInterface::VALUE_LOW);
+			usleep(250000);
+			$pin_front->setValue(PinInterface::VALUE_HIGH);
+			$pin_rear->setValue(PinInterface::VALUE_HIGH);
+		}
+	}
+}
+
+
+
+
 
 $url = 'https://gr2lqfx86d.execute-api.eu-central-1.amazonaws.com/prod/lockcheck';
 $vin_token = '3015def63a839df84029c7a10554a095af1f9d8';
@@ -18,6 +62,7 @@ while (true)
 		$unlock_state = $unlocked['success'];
 		$result = callApi($url, $vin);
 		var_dump('unlocked');
+		carHighlight($unlocked);
 		// call function for car disco with var $unlock_state
 		
 	} else if (!$result['need_to_be_open'] && $result['is_open']) {
@@ -26,6 +71,7 @@ while (true)
 		$unlock_state = $unlocked['success'];
 		$result = callApi($url, $vin);
 		var_dump('locked');
+		carHighlight($unlocked);
 		// call function for car disco with var $unlock_state
 		
 	} else {
@@ -66,5 +112,5 @@ function callApi($url, $vin, $data = array(), $method = '') {
 	
 }
 
-?>
+
 
