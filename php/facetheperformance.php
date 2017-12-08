@@ -7,19 +7,19 @@ use PiPHP\GPIO\Pin\PinInterface;
 
 ob_implicit_flush();
 
-$gpio_front = new GPIO();
-$gpio_rear = new GPIO();
-
-$pin_front = $gpio_front->getOutputPin(24);
-
-$pin_rear = $gpio_rear->getOutputPin(25);
-
 function carHighlight($unlocked) {
+	
+	$gpio_front = new GPIO();
+	$gpio_rear = new GPIO();
+
+	$pin_front = $gpio_front->getOutputPin(24);
+
+	$pin_rear = $gpio_rear->getOutputPin(25);
 
 	$pin_front->setValue(PinInterface::VALUE_LOW);
 	$pin_rear->setValue(PinInterface::VALUE_LOW);
 	
-	if ($unlocked == true)
+	if ($unlocked == false)
 	{
 		for($i=0; $i < 4; $i++) {
 			usleep(100000);
