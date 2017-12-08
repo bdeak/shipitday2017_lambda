@@ -50,10 +50,12 @@ def get_table(dynamodb_resource, table_name):
     return dynamodb_resource.Table(table_name)
 
 def update_opened_status(table, imei, vin_token, state):
+    if type(state) != bool:
+        state = str2bool(state)
     table.update_item(Key={'imei':imei},
         UpdateExpression="SET is_open = :is_open",
         ConditionExpression="vin_token = :vin_token",
-        ExpressionAttributeValues={':vin_token': vin_token, ':is_open': str2bool(state)})
+        ExpressionAttributeValues={ ':vin_token': vin_token, ':is_open': state })
 
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
