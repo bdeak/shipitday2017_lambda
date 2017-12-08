@@ -62,7 +62,7 @@ while (true)
 		$unlock_state = $unlocked['success'];
 		$result = callApi($url, $vin);
 		var_dump('unlocked');
-		carHighlight($unlocked);
+		carHighlight(true);
 		// call function for car disco with var $unlock_state
 		
 	} else if (!$result['need_to_be_open'] && $result['is_open']) {
@@ -71,7 +71,7 @@ while (true)
 		$unlock_state = $unlocked['success'];
 		$result = callApi($url, $vin);
 		var_dump('locked');
-		carHighlight($unlocked);
+		carHighlight(false);
 		// call function for car disco with var $unlock_state
 		
 	} else {
